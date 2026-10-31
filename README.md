@@ -93,6 +93,13 @@ ProjectSettings/
 docs/
   Vehicle-Tuning-and-Equations.md    # Mathematical and designer tuning reference
 Attribution, redistribution and licensing
+Third-Party Assets
+
+Stylized Low Poly Car Free
+Creator: slvpnk
+Source: itch.io — Stylized Low Poly Car Free
+
+The car model is used for vehicle visualization and demonstration.
 Before making a public release, verify the licenses of all bundled models, sounds, textures, packages and other third-party assets. A repository-wide license should be added only after deciding the permissions intended for the original project code and checking redistribution rights for included content.
 
 For project and portfolio information, visit assafarayhan.framer.website.
