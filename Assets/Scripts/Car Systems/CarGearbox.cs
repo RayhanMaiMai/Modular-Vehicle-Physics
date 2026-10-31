@@ -54,7 +54,7 @@ public class CarGearbox : MonoBehaviour
         IsShifting = false;
     }
 
-    public void ProcessGears(float forwardSpeed, float accelInput)
+    public void ProcessGears(float forwardSpeed, float accelInput, float deltaTime)
     {
         if (gears == null || gears.Length == 0) return;
 
@@ -82,13 +82,13 @@ public class CarGearbox : MonoBehaviour
             float baseRPM = Mathf.Clamp01(revSpeed / reverseMaxSpeed);
             
             if (accelInput < -0.1f) {
-                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM + 0.15f, Time.deltaTime * 6f);
+                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM + 0.15f, deltaTime * 6f);
                 
                 // EVALUASI KURVA TENAGA DI GIGI MUNDUR
                 float rpmTorqueFactor = engineTorqueCurve.Evaluate(CurrentRPM);
                 OutputTorqueMultiplier = Mathf.Abs(accelInput) * reverseTorqueMultiplier * rpmTorqueFactor;
             } else {
-                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM * 0.3f, Time.deltaTime * 4f);
+                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM * 0.3f, deltaTime * 4f);
                 OutputTorqueMultiplier = 0f;
             }
             IsShifting = false;
@@ -97,7 +97,7 @@ public class CarGearbox : MonoBehaviour
         {
             // === GIGI NETRAL (N) ===
             float gasAmt = Mathf.Abs(accelInput);
-            CurrentRPM = Mathf.Lerp(CurrentRPM, gasAmt * 0.9f, Time.deltaTime * 8f); 
+            CurrentRPM = Mathf.Lerp(CurrentRPM, gasAmt * 0.9f, deltaTime * 8f);
             OutputTorqueMultiplier = 0f; 
             IsShifting = false;
         }
@@ -108,8 +108,8 @@ public class CarGearbox : MonoBehaviour
 
             if (IsShifting)
             {
-                shiftTimer -= Time.deltaTime;
-                CurrentRPM = Mathf.Lerp(CurrentRPM, 0.4f, Time.deltaTime * 10f); 
+                shiftTimer -= deltaTime;
+                CurrentRPM = Mathf.Lerp(CurrentRPM, 0.4f, deltaTime * 10f);
                 OutputTorqueMultiplier = 0f; 
                 EngineBrakeMultiplier = 0f; 
                 if (shiftTimer <= 0f) IsShifting = false;
@@ -121,12 +121,12 @@ public class CarGearbox : MonoBehaviour
             
             if (accelInput > 0.1f) 
             {
-                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM + 0.15f, Time.deltaTime * 6f);
+                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM + 0.15f, deltaTime * 6f);
                 EngineBrakeMultiplier = 0f; 
             }
             else 
             {
-                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM * 0.3f, Time.deltaTime * 4f); 
+                CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM * 0.3f, deltaTime * 4f);
                 EngineBrakeMultiplier = engineBrakeStrength * gears[gearArrayIndex].torqueMultiplier * CurrentRPM;
             }
 

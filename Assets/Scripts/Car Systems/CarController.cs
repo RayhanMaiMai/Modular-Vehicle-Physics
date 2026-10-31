@@ -3,9 +3,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
+[DefaultExecutionOrder(-100)]
 public class CarController : MonoBehaviour, IPossessable
 {
     public enum DriveType { FWD, RWD, AWD }
+
+    private enum ShiftCommand { Up, Down }
+
+    private const int ShiftCommandCapacity = 8;
 
     // ==========================================
     // DATA & REFERENSI
@@ -76,6 +81,10 @@ public class CarController : MonoBehaviour, IPossessable
     private bool wasAccelPressedLastFrame;
     private Rigidbody rb;
 
+    private readonly ShiftCommand[] pendingShiftCommands = new ShiftCommand[ShiftCommandCapacity];
+    private int pendingShiftCommandHead;
+    private int pendingShiftCommandCount;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -93,7 +102,8 @@ public class CarController : MonoBehaviour, IPossessable
     {
         isControlled = true;
         EnableAllInputs();
-        
+
+        ClearPendingShiftCommands();
         isHandbrakePressed = false; 
         if (audioManager != null) audioManager.TriggerEngineStart();
     }
@@ -103,22 +113,32 @@ public class CarController : MonoBehaviour, IPossessable
         isControlled = false;
         DisableAllInputs();
         
-        // Netralisir input seketika
-        accelInput = 0f;
-        steerInput = 0f;
-        isHandbrakePressed = true; // Rem tangan otomatis ditarik saat parkir
+        ResetControlStateForParking();
         
         if (audioManager != null) audioManager.StopEngine();
+    }
+
+    private void OnDisable()
+    {
+        isControlled = false;
+        ResetControlStateForParking();
     }
 
     public void ProcessInput()
     {
         GatherInputReference();       
-            
+
         if (gearbox != null && gearbox.transmissionType == CarGearbox.TransmissionType.Manual)
         {
-            if (shiftUpAction != null && shiftUpAction.action.WasPressedThisFrame()) gearbox.ShiftUp();
-            if (shiftDownAction != null && shiftDownAction.action.WasPressedThisFrame()) gearbox.ShiftDown();
+            bool shiftUpPressed = shiftUpAction != null && shiftUpAction.action.WasPressedThisFrame();
+            bool shiftDownPressed = shiftDownAction != null && shiftDownAction.action.WasPressedThisFrame();
+
+            // Input System does not expose a reliable order for opposite edges captured
+            // together, so cancel the pair instead of inventing a priority.
+            if (shiftUpPressed != shiftDownPressed)
+            {
+                EnqueueShiftCommand(shiftUpPressed ? ShiftCommand.Up : ShiftCommand.Down);
+            }
         }
 
         HandleVehicleExit();
@@ -142,18 +162,21 @@ public class CarController : MonoBehaviour, IPossessable
     // ==========================================
     private void Update()
     {
-        // Fungsi mekanis tetap berjalan memproses fisika ban & mesin 
-        // meskipun sedang tidak dikendalikan oleh pemain.
-        UpdateSteeringVisuals();
-        
+        HandleAudioOrchestration();
+    }
+
+    private void FixedUpdate()
+    {
+        ProcessPendingShiftCommand();
+        UpdatePhysicsSteering(Time.fixedDeltaTime);
+
         if (gearbox != null)
         {
             float forwardSpeed = Vector3.Dot(transform.forward, rb.linearVelocity);
-            gearbox.ProcessGears(forwardSpeed, accelInput); 
+            gearbox.ProcessGears(forwardSpeed, accelInput, Time.fixedDeltaTime);
         }
 
-        DistributeDrivetrainPower();  
-        HandleAudioOrchestration();  
+        DistributeDrivetrainPower();
     }
 
     private void GatherInputReference()
@@ -192,14 +215,20 @@ public class CarController : MonoBehaviour, IPossessable
         // namun netralisasi variabel (accelInput = 0) di OnUnpossess sudah cukup mengamankan fisika.
     }
 
-    private void UpdateSteeringVisuals()
+    private void UpdatePhysicsSteering(float deltaTime)
     {
         float currentSpeed = rb.linearVelocity.magnitude;
         float speedFactor = Mathf.Clamp01(currentSpeed / highSpeedThreshold);
         float dynamicMaxSteer = Mathf.Lerp(lowSpeedSteerAngle, highSpeedSteerAngle, speedFactor);
         float targetAngle = steerInput * dynamicMaxSteer;
 
-        currentSteerAngle = Mathf.SmoothDamp(currentSteerAngle, targetAngle, ref currentSteerVelocity, steerSmoothTime);
+        currentSteerAngle = Mathf.SmoothDamp(
+            currentSteerAngle,
+            targetAngle,
+            ref currentSteerVelocity,
+            steerSmoothTime,
+            Mathf.Infinity,
+            deltaTime);
 
         float leftSteerAngle = currentSteerAngle;
         float rightSteerAngle = currentSteerAngle;
@@ -251,7 +280,7 @@ public class CarController : MonoBehaviour, IPossessable
 
                 if (enableABS && Mathf.Abs(accelInput) > 0.5f)
                 {
-                    float pulse = (Mathf.Sin(Time.time * absPulseFrequency) + 1f) / 2f;
+                    float pulse = (Mathf.Sin(Time.fixedTime * absPulseFrequency) + 1f) / 2f;
                     float absModifier = Mathf.Lerp(absMinBrakeFactor, 1f, pulse);
                     pedalBrakeForce *= absModifier;
                 }
@@ -301,6 +330,59 @@ public class CarController : MonoBehaviour, IPossessable
             tire.appliedBrakeForce = brake;
             tire.isHandbraking = applyHandbrake;
         }
+    }
+
+    private void EnqueueShiftCommand(ShiftCommand command)
+    {
+        if (pendingShiftCommandCount >= ShiftCommandCapacity)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("Shift command buffer is full; discarding newest command.", this);
+#endif
+            return;
+        }
+
+        int tail = (pendingShiftCommandHead + pendingShiftCommandCount) % ShiftCommandCapacity;
+        pendingShiftCommands[tail] = command;
+        pendingShiftCommandCount++;
+    }
+
+    private void ProcessPendingShiftCommand()
+    {
+        if (pendingShiftCommandCount == 0) return;
+
+        ShiftCommand command = pendingShiftCommands[pendingShiftCommandHead];
+        pendingShiftCommandHead = (pendingShiftCommandHead + 1) % ShiftCommandCapacity;
+        pendingShiftCommandCount--;
+
+        if (gearbox == null) return;
+
+        if (command == ShiftCommand.Up) gearbox.ShiftUp();
+        else gearbox.ShiftDown();
+    }
+
+    private void ClearPendingShiftCommands()
+    {
+        pendingShiftCommandHead = 0;
+        pendingShiftCommandCount = 0;
+    }
+
+    private void ResetControlStateForParking()
+    {
+        accelInput = 0f;
+        steerInput = 0f;
+        currentSteerAngle = 0f;
+        currentSteerVelocity = 0f;
+        isHandbrakePressed = true;
+        ClearPendingShiftCommands();
+
+        if (frontLeftTire != null) frontLeftTire.localRotation = Quaternion.identity;
+        if (frontRightTire != null) frontRightTire.localRotation = Quaternion.identity;
+
+        ApplyPowerToTire(tireFL, 0f, 0f, false);
+        ApplyPowerToTire(tireFR, 0f, 0f, false);
+        ApplyPowerToTire(tireRL, 0f, 0f, true);
+        ApplyPowerToTire(tireRR, 0f, 0f, true);
     }
 
     private void HandleAudioOrchestration()
