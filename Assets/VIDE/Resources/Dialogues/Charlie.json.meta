@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 329a7d546c1264649b203b24e3d39b5e
+timeCreated: 1475412418
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Resources/Dialogues/Charlie.json
+  uploadId: 519084

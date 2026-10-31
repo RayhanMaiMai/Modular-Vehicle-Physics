@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0abe20837dfdeea41904143a1ef5d6b2
+timeCreated: 1497653535
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Demos/Narration/Resources/Dialogues/demo_Narration.json
+  uploadId: 519084

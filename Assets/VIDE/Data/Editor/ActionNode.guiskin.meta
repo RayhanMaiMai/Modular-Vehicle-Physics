@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d12ef81857968a74e98add7130086832
+timeCreated: 1504825906
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Data/Editor/ActionNode.guiskin
+  uploadId: 519084

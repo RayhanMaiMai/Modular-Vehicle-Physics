@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6efb67447de6d76479187ca656c0bc6e
+timeCreated: 1494519221
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Demos/Localization/README.txt
+  uploadId: 519084

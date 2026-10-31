@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 65d052e655d939240b208d2a737afb70
+timeCreated: 1495370898
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Data/DemoAssets/Blue.controller
+  uploadId: 519084

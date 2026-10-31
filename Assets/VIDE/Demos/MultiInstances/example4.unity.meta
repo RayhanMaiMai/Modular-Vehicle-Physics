@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f013e8aadea7416479c29e098c2b2ad6
+timeCreated: 1494513068
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Demos/MultiInstances/example4.unity
+  uploadId: 519084

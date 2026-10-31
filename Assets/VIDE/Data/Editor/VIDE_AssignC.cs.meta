@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6381237488b830d4ea96bd06df7ac630
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Data/Editor/VIDE_AssignC.cs
+  uploadId: 519084

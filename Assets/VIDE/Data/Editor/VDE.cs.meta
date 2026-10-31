@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 6fce019bf711e63429a92bef45038249
+timeCreated: 1488035443
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Data/Editor/VDE.cs
+  uploadId: 519084

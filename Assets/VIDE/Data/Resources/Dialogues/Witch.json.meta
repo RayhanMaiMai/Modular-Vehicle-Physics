@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6dbbaf5a48a01d24f901de6242eb50a1
+timeCreated: 1495306471
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Data/Resources/Dialogues/Witch.json
+  uploadId: 519084

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5a3dd675a3801cc4a8d3a3392bd0b05b
+timeCreated: 1495306471
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Data/Resources/Dialogues/NPCOnly.json
+  uploadId: 519084

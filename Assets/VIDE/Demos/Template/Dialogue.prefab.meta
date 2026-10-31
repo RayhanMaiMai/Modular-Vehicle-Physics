@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 448533ae9dc791f4a81ea55ce349f0a2
+timeCreated: 1518999834
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Demos/Template/Dialogue.prefab
+  uploadId: 519084

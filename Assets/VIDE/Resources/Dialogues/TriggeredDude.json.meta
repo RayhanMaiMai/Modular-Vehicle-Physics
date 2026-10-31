@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8df6d20cc0527de4790878c42be42034
+timeCreated: 1518831339
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 69932
+  packageName: VIDE Dialogues
+  packageVersion: 2.2.2
+  assetPath: Assets/VIDE/Resources/Dialogues/TriggeredDude.json
+  uploadId: 519084
