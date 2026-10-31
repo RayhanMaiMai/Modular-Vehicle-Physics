@@ -80,6 +80,7 @@ public class CarGearbox : MonoBehaviour
             // === GIGI MUNDUR (R) ===
             float revSpeed = Mathf.Abs(forwardSpeed);
             float baseRPM = Mathf.Clamp01(revSpeed / reverseMaxSpeed);
+            EngineBrakeMultiplier = 0f;
             
             if (accelInput < -0.1f) {
                 CurrentRPM = Mathf.Lerp(CurrentRPM, baseRPM + 0.15f, deltaTime * 6f);
@@ -99,6 +100,7 @@ public class CarGearbox : MonoBehaviour
             float gasAmt = Mathf.Abs(accelInput);
             CurrentRPM = Mathf.Lerp(CurrentRPM, gasAmt * 0.9f, deltaTime * 8f);
             OutputTorqueMultiplier = 0f; 
+            EngineBrakeMultiplier = 0f;
             IsShifting = false;
         }
         else 

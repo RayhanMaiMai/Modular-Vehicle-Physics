@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4093315000772014291}
   - component: {fileID: 4547254511276327931}
-  - component: {fileID: 8965762341928317870}
   m_Layer: 7
   m_Name: AntiRollBar_Front
   m_TagString: Untagged
@@ -27,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 44534511855268609}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.77, z: 0.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47,34 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AntiRollBar
   wheelLeft: {fileID: 6026707894608609512}
   wheelRight: {fileID: 2809451932368889332}
-  antiRollForce: 10000
---- !u!54 &8965762341928317870
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 44534511855268609}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  chassisRigidbody: {fileID: 5473880991831488202}
+  enableChassisAntiRoll: 1
+  antiRollForce: 100
+  maxForcePerSide: 10
 --- !u!1 &624924445821667524
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,7 +189,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8742208979438102392}
   - component: {fileID: 224910345829565215}
-  - component: {fileID: 8701498082294091424}
   m_Layer: 7
   m_Name: AntiRollBar_Back
   m_TagString: Untagged
@@ -231,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 933807723838878611}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.77, z: -1.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -251,34 +225,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AntiRollBar
   wheelLeft: {fileID: 3054346758225499927}
   wheelRight: {fileID: 757878826187107376}
-  antiRollForce: 8000
---- !u!54 &8701498082294091424
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 933807723838878611}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  chassisRigidbody: {fileID: 5473880991831488202}
+  enableChassisAntiRoll: 1
+  antiRollForce: 60
+  maxForcePerSide: 6
 --- !u!1 &972145007000339869
 GameObject:
   m_ObjectHideFlags: 0
@@ -2454,7 +2404,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8873987207513464424}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 334.71167, y: 8.165495, z: 378.1863}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2522,7 +2472,7 @@ MonoBehaviour:
   activeCarProfile: {fileID: 11400000, guid: c6be9dbfee71180469947fd1ecdb104f, type: 2}
   audioManager: {fileID: 6412706031045842217}
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  handbrakeAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  handbrakeAction: {fileID: -6955164326660406553, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   hornAction: {fileID: -8711117323294919366, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   shiftUpAction: {fileID: -8705894558762322059, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   shiftDownAction: {fileID: 5907934333157898221, guid: 052faaac586de48259a63d0c4782560b, type: 3}

@@ -1,0 +1,724 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &268545419198356155
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7728053200625578881}
+  - component: {fileID: 4032851078944764279}
+  - component: {fileID: 8025121077340427464}
+  - component: {fileID: 6708442206187436153}
+  - component: {fileID: 5829041498665394844}
+  - component: {fileID: 1197485443337054512}
+  m_Layer: 0
+  m_Name: CarBody
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7728053200625578881
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268545419198356155}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.32234, y: -0.048480034, z: 1.5781199}
+  m_LocalScale: {x: 1.9999499, y: 1, z: 4.0001497}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2968429623262351612}
+  - {fileID: 2537964287996928086}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &4032851078944764279
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268545419198356155}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &8025121077340427464
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268545419198356155}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: ce3f385201aa7ac4990c2517d8a35528, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6708442206187436153
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268545419198356155}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &5829041498665394844
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268545419198356155}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1197485443337054512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268545419198356155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829c63aa72f7a194d8b3a49988404fc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarController
+  activeCarProfile: {fileID: 0}
+  audioManager: {fileID: 0}
+  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  handbrakeAction: {fileID: 0}
+  hornAction: {fileID: 0}
+  shiftUpAction: {fileID: 0}
+  shiftDownAction: {fileID: 0}
+  interactAction: {fileID: 0}
+  carCameraOffset: {x: 0, y: 15, z: -15}
+  exitDoor: {fileID: 0}
+  frontLeftTire: {fileID: 8729380415352621460}
+  frontRightTire: {fileID: 4382802117736399261}
+  wheelbase: 2.5
+  trackWidth: 1.6
+  lowSpeedSteerAngle: 35
+  highSpeedSteerAngle: 10
+  highSpeedThreshold: 20
+  steerSmoothTime: 0.15
+  gearbox: {fileID: 0}
+  driveType: 1
+  awdFrontBias: 0.5
+  enableABS: 1
+  absPulseFrequency: 25
+  absMinBrakeFactor: 0.5
+  tireFL: {fileID: 1566624860278860256}
+  tireFR: {fileID: 8977274095329708090}
+  tireRL: {fileID: 2043002560477166776}
+  tireRR: {fileID: 613543441958418228}
+--- !u!1 &2409980162477949078
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2417108280160379417}
+  - component: {fileID: 613543441958418228}
+  m_Layer: 0
+  m_Name: Back_Right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2417108280160379417
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2409980162477949078}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: -0.5, z: -0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2968429623262351612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &613543441958418228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2409980162477949078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264e83e10b1b6de478d0244ef9102e30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TireSuspension
+  suspensionRestDist: 1
+  springStrength: 40
+  springDamper: 6.5
+  gripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.00000076182187
+      value: 0.5628572
+      inSlope: -0.33626044
+      outSlope: -0.33626044
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.24170212
+      value: 0.48216107
+      inSlope: -0.33023483
+      outSlope: -0.33023483
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.32210997
+    - serializedVersion: 3
+      time: 0.5076064
+      value: 0.11015718
+      inSlope: -0.13852163
+      outSlope: -0.13852163
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.49845877
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxSlipSpeed: 10
+  tireMass: 0.25
+  gripModifier: 1
+  drivableSurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  slipperySurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  slipperySurfaceGripPenalty: 0.4
+  handbrakeGripMultiplier: 0.2
+  handbrakeDragForce: 15
+  tireVisualMesh: {fileID: 0}
+  tireRadius: 0.3
+  carRigidBody: {fileID: 5829041498665394844}
+  carTransform: {fileID: 7728053200625578881}
+  visualRotationSetting: {x: 0, y: 0, z: 0}
+  appliedMotorForce: 0
+  appliedBrakeForce: 0
+  isHandbraking: 0
+--- !u!1 &5450599542501969774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4382802117736399261}
+  - component: {fileID: 8977274095329708090}
+  m_Layer: 0
+  m_Name: Front_Right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4382802117736399261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450599542501969774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: -0.5, z: 0.49999994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2968429623262351612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8977274095329708090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450599542501969774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264e83e10b1b6de478d0244ef9102e30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TireSuspension
+  suspensionRestDist: 1
+  springStrength: 40
+  springDamper: 6.5
+  gripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.00000076182187
+      value: 0.5628572
+      inSlope: -0.33626044
+      outSlope: -0.33626044
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.24170212
+      value: 0.48216107
+      inSlope: -0.33023483
+      outSlope: -0.33023483
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.32210997
+    - serializedVersion: 3
+      time: 0.5076064
+      value: 0.11015718
+      inSlope: -0.13852163
+      outSlope: -0.13852163
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.49845877
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxSlipSpeed: 10
+  tireMass: 0.25
+  gripModifier: 1
+  drivableSurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  slipperySurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  slipperySurfaceGripPenalty: 0.4
+  handbrakeGripMultiplier: 0.2
+  handbrakeDragForce: 15
+  tireVisualMesh: {fileID: 0}
+  tireRadius: 0.3
+  carRigidBody: {fileID: 5829041498665394844}
+  carTransform: {fileID: 7728053200625578881}
+  visualRotationSetting: {x: 0, y: 0, z: 0}
+  appliedMotorForce: 0
+  appliedBrakeForce: 0
+  isHandbraking: 0
+--- !u!1 &6044142922032213041
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8729380415352621460}
+  - component: {fileID: 1566624860278860256}
+  m_Layer: 0
+  m_Name: Front_Left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8729380415352621460
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6044142922032213041}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5, y: -0.5, z: 0.49999994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2968429623262351612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1566624860278860256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6044142922032213041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264e83e10b1b6de478d0244ef9102e30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TireSuspension
+  suspensionRestDist: 1
+  springStrength: 40
+  springDamper: 6.5
+  gripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.00000076182187
+      value: 0.5628572
+      inSlope: -0.33626044
+      outSlope: -0.33626044
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.24170212
+      value: 0.48216107
+      inSlope: -0.33023483
+      outSlope: -0.33023483
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.32210997
+    - serializedVersion: 3
+      time: 0.5076064
+      value: 0.11015718
+      inSlope: -0.13852163
+      outSlope: -0.13852163
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.49845877
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxSlipSpeed: 10
+  tireMass: 0.25
+  gripModifier: 1
+  drivableSurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  slipperySurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  slipperySurfaceGripPenalty: 0.4
+  handbrakeGripMultiplier: 0.2
+  handbrakeDragForce: 15
+  tireVisualMesh: {fileID: 0}
+  tireRadius: 0.3
+  carRigidBody: {fileID: 5829041498665394844}
+  carTransform: {fileID: 7728053200625578881}
+  visualRotationSetting: {x: 0, y: 0, z: 0}
+  appliedMotorForce: 0
+  appliedBrakeForce: 0
+  isHandbraking: 0
+--- !u!1 &8481223942231111167
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2343191797656182004}
+  - component: {fileID: 2043002560477166776}
+  m_Layer: 0
+  m_Name: Back_Left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2343191797656182004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8481223942231111167}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5, y: -0.5, z: -0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2968429623262351612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2043002560477166776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8481223942231111167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264e83e10b1b6de478d0244ef9102e30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TireSuspension
+  suspensionRestDist: 1
+  springStrength: 40
+  springDamper: 6.5
+  gripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.00000076182187
+      value: 0.5628572
+      inSlope: -0.33626044
+      outSlope: -0.33626044
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.24170212
+      value: 0.48216107
+      inSlope: -0.33023483
+      outSlope: -0.33023483
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.32210997
+    - serializedVersion: 3
+      time: 0.5076064
+      value: 0.11015718
+      inSlope: -0.13852163
+      outSlope: -0.13852163
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.49845877
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxSlipSpeed: 10
+  tireMass: 0.25
+  gripModifier: 1
+  drivableSurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  slipperySurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  slipperySurfaceGripPenalty: 0.4
+  handbrakeGripMultiplier: 0.2
+  handbrakeDragForce: 15
+  tireVisualMesh: {fileID: 0}
+  tireRadius: 0.3
+  carRigidBody: {fileID: 5829041498665394844}
+  carTransform: {fileID: 7728053200625578881}
+  visualRotationSetting: {x: 0, y: 0, z: 0}
+  appliedMotorForce: 0
+  appliedBrakeForce: 0
+  isHandbraking: 0
+--- !u!1 &8906534797864232693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2537964287996928086}
+  - component: {fileID: 1724221428282497926}
+  - component: {fileID: 1509634899472638889}
+  m_Layer: 0
+  m_Name: CarInteractor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2537964287996928086
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8906534797864232693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7728053200625578881}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1724221428282497926
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8906534797864232693}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 1, z: 2}
+  m_Center: {x: 0, y: 0, z: -0.000000029802322}
+--- !u!114 &1509634899472638889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8906534797864232693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc4def8acd83db41a34e8ba5558608f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VehicleInteract
+  carController: {fileID: 1197485443337054512}
+  getOutPosition: {fileID: 0}
+--- !u!1 &9119723686169471952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2968429623262351612}
+  m_Layer: 0
+  m_Name: Tire
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2968429623262351612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9119723686169471952}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8729380415352621460}
+  - {fileID: 4382802117736399261}
+  - {fileID: 2343191797656182004}
+  - {fileID: 2417108280160379417}
+  m_Father: {fileID: 7728053200625578881}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -50,6 +50,12 @@ public class CarController : MonoBehaviour, IPossessable
     public float highSpeedThreshold = 20f;
     public float steerSmoothTime = 0.15f; 
 
+    [Header("Optional Driving Style")]
+    [Tooltip("Resolved once in Awake. A null profile or a profile with steering override disabled preserves the serialized steering settings above.")]
+    [SerializeField] private DrivingStyleProfile drivingStyleProfile;
+    [Tooltip("Editor/development builds only: logs authored baselines and the effective initialization snapshot once in Awake.")]
+    [SerializeField] private bool logResolvedStyleOnAwake;
+
     [Header("Drivetrain Settings")]
     public CarGearbox gearbox; 
     public DriveType driveType = DriveType.RWD;
@@ -80,6 +86,15 @@ public class CarController : MonoBehaviour, IPossessable
     private bool wasHandbrakePressedLastFrame;
     private bool wasAccelPressedLastFrame;
     private Rigidbody rb;
+    private ResolvedSteeringSettings resolvedSteeringSettings;
+    private ResolvedVehicleTireStyleSettings resolvedTireStyleSettings;
+    private ResolvedVehicleSuspensionSettings resolvedSuspensionSettings;
+    private ResolvedVehicleAntiRollSettings resolvedAntiRollSettings;
+    private bool steeringOverrideApplied;
+    private bool tireResponseOverrideApplied;
+    private bool handbrakeOverrideApplied;
+    private bool suspensionOverrideApplied;
+    private bool antiRollOverrideApplied;
 
     private readonly ShiftCommand[] pendingShiftCommands = new ShiftCommand[ShiftCommandCapacity];
     private int pendingShiftCommandHead;
@@ -88,7 +103,289 @@ public class CarController : MonoBehaviour, IPossessable
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        resolvedSteeringSettings = SteeringSettingsResolver.Resolve(
+            lowSpeedSteerAngle,
+            highSpeedSteerAngle,
+            highSpeedThreshold,
+            steerSmoothTime,
+            drivingStyleProfile,
+            out string steeringDiagnostic,
+            out steeringOverrideApplied);
+
+        if (!string.IsNullOrEmpty(steeringDiagnostic))
+        {
+            Debug.LogWarning($"{name}: {steeringDiagnostic}", this);
+        }
+
+        string tireDiagnostic = null;
+        ResolvedVehicleTireStyleSettings authoredTireBaselines = new ResolvedVehicleTireStyleSettings(
+            CaptureTireStyleBaseline(tireFL, "front-left", ref tireDiagnostic),
+            CaptureTireStyleBaseline(tireFR, "front-right", ref tireDiagnostic),
+            CaptureTireStyleBaseline(tireRL, "rear-left", ref tireDiagnostic),
+            CaptureTireStyleBaseline(tireRR, "rear-right", ref tireDiagnostic));
+
+        resolvedTireStyleSettings = TireStyleSettingsResolver.Resolve(
+            authoredTireBaselines,
+            drivingStyleProfile,
+            out string styleTireDiagnostic,
+            out tireResponseOverrideApplied,
+            out handbrakeOverrideApplied);
+        tireDiagnostic = AppendDiagnostic(tireDiagnostic, styleTireDiagnostic);
+
+        ApplyTireStyleSettings(tireFL, resolvedTireStyleSettings.FrontLeft);
+        ApplyTireStyleSettings(tireFR, resolvedTireStyleSettings.FrontRight);
+        ApplyTireStyleSettings(tireRL, resolvedTireStyleSettings.RearLeft);
+        ApplyTireStyleSettings(tireRR, resolvedTireStyleSettings.RearRight);
+
+        if (!string.IsNullOrEmpty(tireDiagnostic))
+        {
+            Debug.LogWarning($"{name}: {tireDiagnostic}", this);
+        }
+
+        string suspensionDiagnostic = null;
+        ResolvedVehicleSuspensionSettings authoredSuspensionBaselines = new ResolvedVehicleSuspensionSettings(
+            CaptureSuspensionBaseline(tireFL, "front-left", ref suspensionDiagnostic),
+            CaptureSuspensionBaseline(tireFR, "front-right", ref suspensionDiagnostic),
+            CaptureSuspensionBaseline(tireRL, "rear-left", ref suspensionDiagnostic),
+            CaptureSuspensionBaseline(tireRR, "rear-right", ref suspensionDiagnostic));
+
+        resolvedSuspensionSettings = SuspensionSettingsResolver.Resolve(
+            authoredSuspensionBaselines,
+            drivingStyleProfile,
+            out string styleSuspensionDiagnostic,
+            out suspensionOverrideApplied);
+        suspensionDiagnostic = AppendDiagnostic(suspensionDiagnostic, styleSuspensionDiagnostic);
+
+        ApplySuspensionSettings(tireFL, resolvedSuspensionSettings.FrontLeft);
+        ApplySuspensionSettings(tireFR, resolvedSuspensionSettings.FrontRight);
+        ApplySuspensionSettings(tireRL, resolvedSuspensionSettings.RearLeft);
+        ApplySuspensionSettings(tireRR, resolvedSuspensionSettings.RearRight);
+
+        if (!string.IsNullOrEmpty(suspensionDiagnostic))
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"{name}: {suspensionDiagnostic}", this);
+#endif
+        }
+
+        AntiRollBar[] antiRollCandidates = GetComponentsInChildren<AntiRollBar>(true);
+        AntiRollBar frontAntiRollBar = FindUniqueAntiRollBar(
+            antiRollCandidates,
+            tireFL,
+            tireFR);
+        AntiRollBar rearAntiRollBar = FindUniqueAntiRollBar(
+            antiRollCandidates,
+            tireRL,
+            tireRR);
+        bool hasUnambiguousAntiRollLinkage = frontAntiRollBar != null
+            && rearAntiRollBar != null
+            && frontAntiRollBar != rearAntiRollBar;
+
+        ResolvedVehicleAntiRollSettings authoredAntiRollBaselines = new ResolvedVehicleAntiRollSettings(
+            frontAntiRollBar != null
+                ? frontAntiRollBar.CaptureAuthoredStyleSettings()
+                : AntiRollSettingsResolver.CreateUnavailableBaseline(),
+            rearAntiRollBar != null
+                ? rearAntiRollBar.CaptureAuthoredStyleSettings()
+                : AntiRollSettingsResolver.CreateUnavailableBaseline());
+
+        resolvedAntiRollSettings = AntiRollSettingsResolver.Resolve(
+            authoredAntiRollBaselines,
+            hasUnambiguousAntiRollLinkage,
+            drivingStyleProfile,
+            out string antiRollDiagnostic,
+            out antiRollOverrideApplied);
+
+        if (hasUnambiguousAntiRollLinkage)
+        {
+            frontAntiRollBar.ApplyResolvedStyleSettings(resolvedAntiRollSettings.Front);
+            rearAntiRollBar.ApplyResolvedStyleSettings(resolvedAntiRollSettings.Rear);
+        }
+
+        if (!string.IsNullOrEmpty(antiRollDiagnostic))
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"{name}: {antiRollDiagnostic}", this);
+#endif
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (logResolvedStyleOnAwake)
+        {
+            LogResolvedStyleSnapshot(
+                authoredTireBaselines,
+                authoredSuspensionBaselines,
+                authoredAntiRollBaselines,
+                hasUnambiguousAntiRollLinkage);
+        }
+#endif
     }
+
+    private static ResolvedTireStyleSettings CaptureTireStyleBaseline(
+        TirePhysics tire,
+        string tireLabel,
+        ref string diagnostic)
+    {
+        if (tire == null)
+        {
+            return TireStyleSettingsResolver.CreateSafeFallback();
+        }
+
+        ResolvedTireStyleSettings baseline = tire.CaptureAuthoredStyleSettings(out bool usedSafeFallback);
+        if (usedSafeFallback)
+        {
+            diagnostic = AppendDiagnostic(
+                diagnostic,
+                $"The {tireLabel} tire has invalid authored style values and is using a safe runtime fallback; correct its TirePhysics Inspector fields.");
+        }
+
+        return baseline;
+    }
+
+    private static void ApplyTireStyleSettings(TirePhysics tire, ResolvedTireStyleSettings settings)
+    {
+        if (tire != null)
+        {
+            tire.ApplyResolvedStyleSettings(settings);
+        }
+    }
+
+    private static ResolvedSuspensionSettings CaptureSuspensionBaseline(
+        TirePhysics tire,
+        string tireLabel,
+        ref string diagnostic)
+    {
+        if (tire == null)
+        {
+            return SuspensionSettingsResolver.CreateSafeFallback();
+        }
+
+        ResolvedSuspensionSettings baseline = tire.CaptureAuthoredSuspensionSettings(out bool usedSafeFallback);
+        if (usedSafeFallback)
+        {
+            diagnostic = AppendDiagnostic(
+                diagnostic,
+                $"The {tireLabel} tire has invalid authored suspension values and is using a safe runtime fallback; correct its TirePhysics Inspector fields.");
+        }
+
+        return baseline;
+    }
+
+    private static void ApplySuspensionSettings(TirePhysics tire, ResolvedSuspensionSettings settings)
+    {
+        if (tire != null)
+        {
+            tire.ApplyResolvedSuspensionSettings(settings);
+        }
+    }
+
+    private AntiRollBar FindUniqueAntiRollBar(
+        AntiRollBar[] candidates,
+        TirePhysics expectedWheelA,
+        TirePhysics expectedWheelB)
+    {
+        AntiRollBar match = null;
+        int matchCount = 0;
+
+        for (int i = 0; i < candidates.Length; i++)
+        {
+            AntiRollBar candidate = candidates[i];
+            if (candidate == null || !candidate.HasExactLinkage(rb, expectedWheelA, expectedWheelB))
+            {
+                continue;
+            }
+
+            match = candidate;
+            matchCount++;
+        }
+
+        return matchCount == 1 ? match : null;
+    }
+
+    private static string AppendDiagnostic(string existing, string addition)
+    {
+        if (string.IsNullOrEmpty(addition)) return existing;
+        return string.IsNullOrEmpty(existing) ? addition : existing + " " + addition;
+    }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    private void LogResolvedStyleSnapshot(
+        ResolvedVehicleTireStyleSettings authoredTireBaselines,
+        ResolvedVehicleSuspensionSettings authoredSuspensionBaselines,
+        ResolvedVehicleAntiRollSettings authoredAntiRollBaselines,
+        bool hasUnambiguousAntiRollLinkage)
+    {
+        bool steeringRequested = drivingStyleProfile != null && drivingStyleProfile.OverrideSteering;
+        bool tireRequested = drivingStyleProfile != null && drivingStyleProfile.OverrideTireResponse;
+        bool handbrakeRequested = drivingStyleProfile != null && drivingStyleProfile.OverrideHandbrake;
+        bool suspensionRequested = drivingStyleProfile != null && drivingStyleProfile.OverrideSuspension;
+        bool antiRollRequested = drivingStyleProfile != null && drivingStyleProfile.OverrideAntiRoll;
+
+        Debug.Log(
+            $"{name} driving-style snapshot (read-only, resolved in Awake)\n"
+            + $"Override flags: steering={steeringRequested}, tireResponse={tireRequested}, "
+            + $"handbrake={handbrakeRequested}, suspension={suspensionRequested}, antiRoll={antiRollRequested}\n"
+            + $"Resolution: steering={FormatResolutionStatus(steeringRequested, steeringOverrideApplied)}, "
+            + $"tireResponse={FormatResolutionStatus(tireRequested, tireResponseOverrideApplied)}, "
+            + $"handbrake={FormatResolutionStatus(handbrakeRequested, handbrakeOverrideApplied)}, "
+            + $"suspension={FormatResolutionStatus(suspensionRequested, suspensionOverrideApplied)}, "
+            + $"antiRoll={FormatResolutionStatus(antiRollRequested, antiRollOverrideApplied)}, "
+            + $"antiRollLinkage={(hasUnambiguousAntiRollLinkage ? "exact" : "missing/ambiguous")}\n"
+            + $"Authored steering baseline: low={lowSpeedSteerAngle:0.###}, high={highSpeedSteerAngle:0.###}, "
+            + $"referenceSpeed={highSpeedThreshold:0.###}, smoothTime={steerSmoothTime:0.###}\n"
+            + $"Runtime effective steering: low={resolvedSteeringSettings.LowSpeedSteerAngle:0.###}, "
+            + $"high={resolvedSteeringSettings.HighSpeedSteerAngle:0.###}, "
+            + $"referenceSpeed={resolvedSteeringSettings.HighSpeedThreshold:0.###}, "
+            + $"smoothTime={resolvedSteeringSettings.SteerSmoothTime:0.###}\n"
+            + $"Authored tires: FL {FormatTireStyle(authoredTireBaselines.FrontLeft)}; "
+            + $"FR {FormatTireStyle(authoredTireBaselines.FrontRight)}; "
+            + $"RL {FormatTireStyle(authoredTireBaselines.RearLeft)}; "
+            + $"RR {FormatTireStyle(authoredTireBaselines.RearRight)}\n"
+            + $"Runtime effective tires: FL {FormatTireStyle(resolvedTireStyleSettings.FrontLeft)}; "
+            + $"FR {FormatTireStyle(resolvedTireStyleSettings.FrontRight)}; "
+            + $"RL {FormatTireStyle(resolvedTireStyleSettings.RearLeft)}; "
+            + $"RR {FormatTireStyle(resolvedTireStyleSettings.RearRight)}\n"
+            + $"Authored suspension: FL {FormatSuspension(authoredSuspensionBaselines.FrontLeft)}; "
+            + $"FR {FormatSuspension(authoredSuspensionBaselines.FrontRight)}; "
+            + $"RL {FormatSuspension(authoredSuspensionBaselines.RearLeft)}; "
+            + $"RR {FormatSuspension(authoredSuspensionBaselines.RearRight)}\n"
+            + $"Runtime effective suspension: FL {FormatSuspension(resolvedSuspensionSettings.FrontLeft)}; "
+            + $"FR {FormatSuspension(resolvedSuspensionSettings.FrontRight)}; "
+            + $"RL {FormatSuspension(resolvedSuspensionSettings.RearLeft)}; "
+            + $"RR {FormatSuspension(resolvedSuspensionSettings.RearRight)}\n"
+            + $"Authored anti-roll: front {FormatAntiRoll(authoredAntiRollBaselines.Front)}; "
+            + $"rear {FormatAntiRoll(authoredAntiRollBaselines.Rear)}\n"
+            + $"Runtime effective anti-roll: front {FormatAntiRoll(resolvedAntiRollSettings.Front)}; "
+            + $"rear {FormatAntiRoll(resolvedAntiRollSettings.Rear)}\n"
+            + "An OFF prefab anti-roll gate remains OFF and disables that axle regardless of resolved strength/cap.",
+            this);
+    }
+
+    private static string FormatTireStyle(ResolvedTireStyleSettings settings)
+    {
+        return $"[grip={settings.GripModifier:0.###}, maxSlip={settings.MaxSlipSpeed:0.###}, "
+            + $"curveKeys={settings.GripCurveKeyCount}, curve(0)={settings.EvaluateGrip(0f):0.###}, "
+            + $"curve(1)={settings.EvaluateGrip(1f):0.###}, handbrakeGrip={settings.HandbrakeGripMultiplier:0.###}, "
+            + $"handbrakeDrag={settings.HandbrakeDragForce:0.###}]";
+    }
+
+    private static string FormatSuspension(ResolvedSuspensionSettings settings)
+    {
+        return $"[spring={settings.SpringStrength:0.###}, damper={settings.DamperStrength:0.###}]";
+    }
+
+    private static string FormatAntiRoll(ResolvedAntiRollSettings settings)
+    {
+        return $"[gate={settings.GateEnabled}, strength={settings.Strength:0.###}, cap={settings.MaxForcePerSide:0.###}]";
+    }
+
+    private static string FormatResolutionStatus(bool requested, bool applied)
+    {
+        if (!requested) return "authored baseline";
+        return applied ? "style applied" : "fallback to authored baseline";
+    }
+#endif
 
     public void SetStoredDriver(DriverController driver)
     {
@@ -218,15 +515,18 @@ public class CarController : MonoBehaviour, IPossessable
     private void UpdatePhysicsSteering(float deltaTime)
     {
         float currentSpeed = rb.linearVelocity.magnitude;
-        float speedFactor = Mathf.Clamp01(currentSpeed / highSpeedThreshold);
-        float dynamicMaxSteer = Mathf.Lerp(lowSpeedSteerAngle, highSpeedSteerAngle, speedFactor);
+        float speedFactor = Mathf.Clamp01(currentSpeed / resolvedSteeringSettings.HighSpeedThreshold);
+        float dynamicMaxSteer = Mathf.Lerp(
+            resolvedSteeringSettings.LowSpeedSteerAngle,
+            resolvedSteeringSettings.HighSpeedSteerAngle,
+            speedFactor);
         float targetAngle = steerInput * dynamicMaxSteer;
 
         currentSteerAngle = Mathf.SmoothDamp(
             currentSteerAngle,
             targetAngle,
             ref currentSteerVelocity,
-            steerSmoothTime,
+            resolvedSteeringSettings.SteerSmoothTime,
             Mathf.Infinity,
             deltaTime);
 

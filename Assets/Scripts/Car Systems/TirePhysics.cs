@@ -54,6 +54,66 @@ public class TirePhysics : MonoBehaviour
     private Vector3 axleWorldVel;       
     private Vector3 contactPatchVel;    
     private float currentVisualRotation;
+    private ResolvedTireStyleSettings resolvedStyleSettings;
+    private bool hasResolvedStyleSettings;
+    private ResolvedSuspensionSettings resolvedSuspensionSettings;
+    private bool hasResolvedSuspensionSettings;
+
+    private void Awake()
+    {
+        bool tireUsedSafeFallback = false;
+        bool suspensionUsedSafeFallback = false;
+
+        if (!hasResolvedStyleSettings)
+        {
+            resolvedStyleSettings = CaptureAuthoredStyleSettings(out tireUsedSafeFallback);
+            hasResolvedStyleSettings = true;
+        }
+
+        if (!hasResolvedSuspensionSettings)
+        {
+            resolvedSuspensionSettings = CaptureAuthoredSuspensionSettings(out suspensionUsedSafeFallback);
+            hasResolvedSuspensionSettings = true;
+        }
+
+        if (tireUsedSafeFallback || suspensionUsedSafeFallback)
+        {
+            Debug.LogWarning(
+                $"{name}: Authored tire, handbrake, or suspension settings are invalid. Using a safe runtime fallback; correct the TirePhysics Inspector values.",
+                this);
+        }
+    }
+
+    internal ResolvedTireStyleSettings CaptureAuthoredStyleSettings(out bool usedSafeFallback)
+    {
+        return TireStyleSettingsResolver.CaptureBaseline(
+            gripCurve,
+            maxSlipSpeed,
+            gripModifier,
+            handbrakeGripMultiplier,
+            handbrakeDragForce,
+            out usedSafeFallback);
+    }
+
+    internal void ApplyResolvedStyleSettings(ResolvedTireStyleSettings settings)
+    {
+        resolvedStyleSettings = settings;
+        hasResolvedStyleSettings = true;
+    }
+
+    internal ResolvedSuspensionSettings CaptureAuthoredSuspensionSettings(out bool usedSafeFallback)
+    {
+        return SuspensionSettingsResolver.CaptureBaseline(
+            springStrength,
+            springDamper,
+            out usedSafeFallback);
+    }
+
+    internal void ApplyResolvedSuspensionSettings(ResolvedSuspensionSettings settings)
+    {
+        resolvedSuspensionSettings = settings;
+        hasResolvedSuspensionSettings = true;
+    }
 
 
     private void FixedUpdate()
@@ -93,7 +153,8 @@ public class TirePhysics : MonoBehaviour
         float offset = suspensionRestDist - CurrentSuspensionDistance;
         float vel = Vector3.Dot(springDir, axleWorldVel);
         
-        float suspensionForce = (offset * springStrength) - (vel * springDamper);
+        float suspensionForce = (offset * resolvedSuspensionSettings.SpringStrength)
+            - (vel * resolvedSuspensionSettings.DamperStrength);
         carRigidBody.AddForceAtPosition(springDir * suspensionForce, transform.position);
     }
 
@@ -107,8 +168,8 @@ public class TirePhysics : MonoBehaviour
         float steeringVel = Vector3.Dot(steeringDir, contactPatchVel);
         
         float currentSlipSpeed = Mathf.Abs(steeringVel);
-        float normalizedSlip = Mathf.Clamp01(currentSlipSpeed / maxSlipSpeed);
-        float baseCurveGrip = gripCurve.Evaluate(normalizedSlip);
+        float normalizedSlip = Mathf.Clamp01(currentSlipSpeed / resolvedStyleSettings.MaxSlipSpeed);
+        float baseCurveGrip = resolvedStyleSettings.EvaluateGrip(normalizedSlip);
 
         float surfaceMultiplier = 1f;
         if (((1 << groundHit.collider.gameObject.layer) & slipperySurfaceLayer) != 0)
@@ -116,8 +177,8 @@ public class TirePhysics : MonoBehaviour
             surfaceMultiplier = slipperySurfaceGripPenalty;
         }
 
-        float finalGrip = baseCurveGrip * gripModifier * surfaceMultiplier;
-        if (isHandbraking) finalGrip *= handbrakeGripMultiplier; 
+        float finalGrip = baseCurveGrip * resolvedStyleSettings.GripModifier * surfaceMultiplier;
+        if (isHandbraking) finalGrip *= resolvedStyleSettings.HandbrakeGripMultiplier;
         
         return finalGrip;
     }
@@ -137,7 +198,10 @@ public class TirePhysics : MonoBehaviour
         {
             float forwardVel = Vector3.Dot(accelDir, contactPatchVel);
             desiredLngForceMag = tireMass * (-forwardVel / Time.fixedDeltaTime);
-            desiredLngForceMag = Mathf.Clamp(desiredLngForceMag, -handbrakeDragForce, handbrakeDragForce);
+            desiredLngForceMag = Mathf.Clamp(
+                desiredLngForceMag,
+                -resolvedStyleSettings.HandbrakeDragForce,
+                resolvedStyleSettings.HandbrakeDragForce);
         }
         else 
         {
